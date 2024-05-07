@@ -23,8 +23,8 @@ class PurchaseOrder(models.Model):
     quantity = models.IntegerField(null=False, blank=False)
     STATUS_CHOICES = (
         ('pending', 'Pending'),
-        ('informed',),
-        ('listed','Listed')
+        ('informed','informed'),
+        ('listed','Listed'),
         ('completed', 'Completed'),
         ('canceled', 'Canceled'),
     )
@@ -38,11 +38,11 @@ class PurchaseOrder(models.Model):
 
 class HistoricalPerformance(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    date = models.DateTimeField()
-    on_time_delivery_rate = models.FloatField(validators=[MinValueValidator(0.0, "Rate cannot be negative")])
-    quality_rating_avg = models.FloatField(validators=[MinValueValidator(0.0, "Rating cannot be negative")])
-    average_response_time = models.FloatField(validators=[MinValueValidator(0.0, "Time cannot be negative")])
-    fulfillment_rate = models.FloatField(validators=[MinValueValidator(0.0, "Rate cannot be negative")])
+    date = models.DateTimeField(auto_now=True)
+    on_time_delivery_rate = models.FloatField(validators=[MinValueValidator(0.0, "Rate cannot be negative")],blank=True, null=True)
+    quality_rating_avg = models.FloatField(validators=[MinValueValidator(0.0, "Rating cannot be negative")],blank=True, null=True)
+    average_response_time = models.FloatField(validators=[MinValueValidator(0.0, "Time cannot be negative")],blank=True, null=True)
+    fulfillment_rate = models.FloatField(validators=[MinValueValidator(0.0, "Rate cannot be negative")],blank=True, null=True)
 
     def __str__(self):
         return f"Performance for {self.vendor} on {self.date}"
