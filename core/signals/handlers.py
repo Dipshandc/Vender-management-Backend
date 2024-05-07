@@ -31,7 +31,7 @@ def update_purchase_order(sender, instance, created, **kwargs):
   elif instance.status == 'completed':
     #for calculating on time delivery rate
     total_completed_order = PurchaseOrder.objects.filter(vendor=instance.vendor,status='completed').count()
-    total_on_time_completed_order = PurchaseOrder.objects.filter(vendor=instance.vendor,status='completed',delivery_date__lte=timezone.now()).count()
+    total_on_time_completed_order = PurchaseOrder.objects.filter(vendor=instance.vendor,status='completed',delivery_date__gte=timezone.now()).count()
     print(total_completed_order,total_on_time_completed_order)
     on_time_delivery_rate = (total_on_time_completed_order/total_completed_order)*100
     print(on_time_delivery_rate)
