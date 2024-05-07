@@ -23,14 +23,14 @@ class PurchaseOrder(models.Model):
     quantity = models.IntegerField(null=False, blank=False)
     STATUS_CHOICES = (
         ('pending', 'Pending'),
-        ('informed','informed'),
+        ('informed','Informed'),
         ('listed','Listed'),
         ('completed', 'Completed'),
         ('canceled', 'Canceled'),
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     quality_rating = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0.0, "Rating cannot be negative")])
-    issue_date = models.DateTimeField()
+    issue_date = models.DateTimeField(blank=True, null=True)
     acknowledgment_date = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
