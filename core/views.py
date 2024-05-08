@@ -27,8 +27,8 @@ class HistoricalPerformanceView(APIView):
 class IssueDateView(APIView):
   serializer_class = IssueDateSerializer
 
-  def post(self,request,pk):
-    purchase_order = get_object_or_404(PurchaseOrder,po_number=pk)
+  def post(self,request,po_number):
+    purchase_order = get_object_or_404(PurchaseOrder,po_number=po_number)
     purchase_order.status = 'informed'
     purchase_order.issue_date = timezone.now()
     purchase_order.save()
@@ -37,8 +37,8 @@ class IssueDateView(APIView):
 class AcknowledgementView(APIView):
   serializer_class = AcknowledgementSerializer
 
-  def post(self,request,pk):
-    purchase_order = get_object_or_404(PurchaseOrder,po_number=pk)
+  def post(self,request,po_number):
+    purchase_order = get_object_or_404(PurchaseOrder,po_number=po_number)
     purchase_order.status = 'listed'
     purchase_order.acknowledgment_date = timezone.now()
     purchase_order.save()

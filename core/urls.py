@@ -6,8 +6,8 @@ router.register('vendors', VendorViewSet)
 router.register('purchase_orders',PurchaseOrderViewSet)
 
 urlpatterns = [
-    path('/', include(router.urls)),
-    path('/vendors/<str:pk>/performance/',HistoricalPerformanceView.as_view(),name='performance'),
-    path('/purchase_orders/<str:pk>/acknowledge/',AcknowledgementView.as_view(),name='acknowledgement'),
-    path('/purchase_orders/<str:pk>/issue/',IssueDateView.as_view(),name='issue')
+    path('', include(router.urls)),
+    path('vendors/<str:pk>/performance/',HistoricalPerformanceView.as_view(),name='performance'),
+    path('purchase_orders/<str:po_number>/acknowledge/',AcknowledgementView.as_view(),name='acknowledgement'),
+    path('purchase_orders/<str:po_number>/issue/',IssueDateView.as_view(),name='issue')
 ]
