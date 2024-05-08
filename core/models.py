@@ -13,7 +13,6 @@ class CustomUser(AbstractUser):
         ('customer', 'Customer'),
         ('vendor', 'Vendor'),
     )
-
     contact_details = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
@@ -29,7 +28,7 @@ class Vendor(models.Model):
     address = models.TextField(null=False,blank=False)
 
     def __str__(self):
-        return self.name
+        return self.name.username
     
 
 class PurchaseOrder(models.Model):

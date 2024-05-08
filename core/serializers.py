@@ -2,16 +2,13 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .models import CustomUser, Vendor, PurchaseOrder, HistoricalPerformance
 
-class CustomeUserSerializer(ModelSerializer):
+class CustomUserSerializer(ModelSerializer):
   class Meta:
     model = CustomUser
     fields = ['username','contact_details','address','user_type','password']
-    
-
-class CustomeUserLoginSerializer(ModelSerializer):
-  class Meta:
-    model = CustomUser
-    fields = ['username','password']
+  
+  def create(self, validated_data):
+    return CustomUser.objects.create_user(**validated_data)
 
 
 class VendorSerializer(ModelSerializer):
