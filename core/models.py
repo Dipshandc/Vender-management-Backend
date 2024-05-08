@@ -1,18 +1,36 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid
 from django.core.validators import MinValueValidator
 
+
 def generate_vendor_code():
   return str(uuid.uuid4())[:5]
 
+
+class CustomUser(AbstractUser):
+    USER_TYPE_CHOICES = (
+        ('customer', 'Customer'),
+        ('vendor', 'Vendor'),
+    )
+
+    contact_details = models.CharField(max_length=255)
+    address = models.CharField(max_length=255)
+    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
+    
+    def __str__(self):
+        return self.username
+
+
 class Vendor(models.Model):
     vendor_code = models.CharField(primary_key=True,max_length=6,default=generate_vendor_code)
-    name = models.CharField(max_length=25,null=False,blank=False)
+    name = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     contact_details = models.TextField(null=False,blank=False)
     address = models.TextField(null=False,blank=False)
 
     def __str__(self):
         return self.name
+    
 
 class PurchaseOrder(models.Model):
     po_number = models.CharField(primary_key=True, max_length=6, default=generate_vendor_code)
@@ -35,6 +53,7 @@ class PurchaseOrder(models.Model):
 
     def __str__(self):
         return f"PO number: {self.po_number} - Vendor: {self.vendor}"
+    
 
 class HistoricalPerformance(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
@@ -46,3 +65,5 @@ class HistoricalPerformance(models.Model):
 
     def __str__(self):
         return f"Performance for {self.vendor} on {self.date}"
+
+

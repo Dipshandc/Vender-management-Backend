@@ -1,14 +1,18 @@
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User 
 from django.dispatch import receiver
-from ..models import Vendor, HistoricalPerformance, PurchaseOrder
+from ..models import CustomUser, Vendor, HistoricalPerformance, PurchaseOrder
 from django.utils import timezone
  
- 
-@receiver(post_save, sender=Vendor)
-def create_vendor_performance(sender, instance, created, **kwargs):
- if created:
-   HistoricalPerformance.objects.create(vendor=instance)
+@receiver(post_save, sender=CustomUser)
+def create_vendor_and_performance(sender, instance, created, **kwargs):
+    if created and instance.user_type == 'vendor':
+        vendor = Vendor.objects.create(
+            name=instance.name,
+            contact_details=instance.contact_details,
+            address=instance.address
+        )
+        HistoricalPerformance.objects.create(vendor=vendor)
 
 
 @receiver(post_save, sender=PurchaseOrder)
