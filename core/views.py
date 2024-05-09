@@ -1,13 +1,13 @@
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from rest_framework import status,exceptions
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import Group
 from .models import Vendor, PurchaseOrder, HistoricalPerformance
+from .permission import IsVendorOrReadOnly, IsCustomerOrReadOnly, IsAdminOrReadOnly
 from .serializers import VendorSerializer,\
                         PurchaseOrderSerializer,\
                         HistoricalPerformanceSerializer,\
@@ -47,6 +47,7 @@ class CreateUserAPIView(APIView):
 class VendorViewSet(ModelViewSet):
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
+    permission_classes = [IsVendorOrReadOnly]
 
     def list(self, request, *args, **kwargs):
       queryset = self.filter_queryset(self.get_queryset())
@@ -56,16 +57,17 @@ class VendorViewSet(ModelViewSet):
         return self.get_paginated_response(serializer.data)
       serializer = self.get_serializer(queryset, many=True)
       return Response(serializer.data)
-
-
+    
 
 class PurchaseOrderViewSet(ModelViewSet):
     queryset = PurchaseOrder.objects.all()
     serializer_class = PurchaseOrderSerializer
+    permission_classes = [IsCustomerOrReadOnly]
 
 
 class HistoricalPerformanceView(APIView):
     serializer_class = HistoricalPerformanceSerializer
+    permission_classes = [AllowAny]
 
     def get(self,request,pk):
       historical_performance = get_object_or_404(HistoricalPerformance,vendor=pk)
@@ -74,6 +76,8 @@ class HistoricalPerformanceView(APIView):
 
 class IssueDateView(APIView):
    serializer_class = IssueDateSerializer
+   permission_classes = [IsAdminOrReadOnly]
+
 
    def post(self,request,po_number):
       purchase_order = get_object_or_404(PurchaseOrder,po_number=po_number)
@@ -84,6 +88,7 @@ class IssueDateView(APIView):
   
 class AcknowledgementView(APIView):
     serializer_class = AcknowledgementSerializer
+    permission_classes = [IsVendorOrReadOnly]
 
     def post(self,request,po_number):
       purchase_order = get_object_or_404(PurchaseOrder,po_number=po_number)
