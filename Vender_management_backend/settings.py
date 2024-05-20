@@ -28,7 +28,8 @@ SECRET_KEY = 'django-insecure-tx880)k#7g9(590x*nsi7vbve5%73p040_ewq*ejf3%8^w3c1s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'vendor.localhost', 'abc.vendor.localhost', 'xyz.vendor.localhost']
+
 
 
 # Application definition
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'tenants',
     'rest_framework',
     'drf_spectacular',
     ]
@@ -53,7 +55,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'tenants.middlewares.TenantMiddleware',
 ]
+
+DATABASE_ROUTERS = ["tenants.router.TenantRouter"]
 
 ROOT_URLCONF = 'Vender_management_backend.urls'
 
@@ -80,10 +85,9 @@ WSGI_APPLICATION = 'Vender_management_backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "default.db"},
+"abc": {"ENGINE": "django.db.backends.sqlite3", "NAME": "abc.db"},
+"xyz": {"ENGINE": "django.db.backends.sqlite3", "NAME": "xyz.db"},
 }
 
 
