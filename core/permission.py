@@ -7,7 +7,7 @@ class IsVendorOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        if request.user.is_authenticated  and request.user.user_type == "Vendor" and request.user.is_staff:
+        if request.user.is_authenticated  and (request.user.user_type == "Vendor" or request.user.is_staff):
             return True
         else:
             logging.warning(
@@ -22,7 +22,7 @@ class IsCustomerOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        if request.user.is_authenticated  and request.user.user_type == "Customer" and request.user.is_staff:
+        if request.user.is_authenticated  and (request.user.user_type == "Customer" or request.user.is_staff):
             return True
         else:
             logging.warning(
